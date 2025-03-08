@@ -11,6 +11,7 @@ Este projeto é um dashboard interativo para visualização e análise de dados 
 - [x] Estrutura básica do monorepo
 - [x] Configuração do ambiente de desenvolvimento
 - [x] Arquivos de configuração (package.json, tsconfig.json)
+- [x] Integração com browser-tools-mcp
 - [ ] Implementação do frontend
 - [ ] Implementação do backend
 - [ ] Integração com Supabase
@@ -25,6 +26,7 @@ O projeto segue uma estrutura de monorepo com as seguintes divisões principais:
 /
 ├── frontend/     # Aplicação React + TypeScript
 ├── backend/      # API Node.js + Express
+├── browser-tools-mcp.ts  # Utilitários para ferramentas de navegador
 ```
 
 ### Frontend
@@ -42,6 +44,16 @@ O projeto segue uma estrutura de monorepo com as seguintes divisões principais:
 - Arquitetura em camadas (controllers, services, repositories)
 - Integração com Supabase para persistência de dados
 - Documentação de API com OpenAPI/Swagger
+
+### Browser Tools MCP
+
+O projeto inclui uma biblioteca de ferramentas para navegador (browser-tools-mcp) que fornece:
+
+- Depuração de estado de componentes
+- Medição de performance
+- Exportação de dados
+- Verificação de compatibilidade do navegador
+- Integração com Supabase para sincronização de dados
 
 ## Módulos Principais
 
@@ -96,6 +108,47 @@ npm run start:frontend
 # Backend
 npm run start:backend
 ```
+
+## Utilizando o Browser Tools MCP
+
+O Browser Tools MCP é uma biblioteca de utilitários para ajudar no desenvolvimento e depuração do projeto.
+
+### No Frontend
+
+```typescript
+import { useBrowserTools } from '../utils/browser-tools';
+
+const MyComponent = () => {
+  const { debugState, measurePerformance, exportData } = useBrowserTools();
+  
+  // Depurar estado
+  debugState(myState, 'Estado do componente');
+  
+  // Medir performance
+  const result = measurePerformance(() => {
+    // Código a ser medido
+    return processData(data);
+  }, 'Processamento de dados');
+  
+  // Exportar dados
+  const handleExport = () => {
+    exportData(data, 'export.json');
+  };
+  
+  return (
+    // ...
+  );
+};
+```
+
+### No Backend
+
+O backend expõe endpoints para integração com o Browser Tools MCP:
+
+- `GET /api/browser-tools/status` - Verifica o status da integração
+- `POST /api/browser-tools/events` - Registra eventos do cliente
+- `GET /api/browser-tools/metrics/performance` - Obtém métricas de performance
+- `GET /api/browser-tools/metrics/compatibility` - Obtém relatório de compatibilidade
 
 ## Padrões de Desenvolvimento
 
