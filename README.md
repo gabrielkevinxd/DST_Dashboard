@@ -24,9 +24,11 @@ O projeto segue uma estrutura de monorepo com as seguintes divisões principais:
 
 ```
 /
-├── frontend/     # Aplicação React + TypeScript
-├── backend/      # API Node.js + Express
-├── browser-tools-mcp.ts  # Utilitários para ferramentas de navegador
+├── frontend/                  # Aplicação React + TypeScript
+│   └── src/utils/browser-tools/  # Ferramentas para navegador (frontend)
+├── backend/                   # API Node.js + Express
+│   └── src/utils/browser-tools/  # Ferramentas para navegador (backend)
+└── tools/                     # Repositório clonado do browser-tools-mcp
 ```
 
 ### Frontend
@@ -116,13 +118,17 @@ O Browser Tools MCP é uma biblioteca de utilitários para ajudar no desenvolvim
 ### No Frontend
 
 ```typescript
-import { useBrowserTools } from '../utils/browser-tools';
+import { useBrowserTools } from '../../utils/browser-tools';
 
 const MyComponent = () => {
-  const { debugState, measurePerformance, exportData } = useBrowserTools();
+  const { debugState, measurePerformance, exportData, checkBrowserCompatibility } = useBrowserTools();
   
   // Depurar estado
   debugState(myState, 'Estado do componente');
+  
+  // Verificar compatibilidade do navegador
+  const compatibility = checkBrowserCompatibility();
+  console.log('Compatibilidade do navegador:', compatibility);
   
   // Medir performance
   const result = measurePerformance(() => {
@@ -145,10 +151,44 @@ const MyComponent = () => {
 
 O backend expõe endpoints para integração com o Browser Tools MCP:
 
+```typescript
+import { createBrowserToolsExpress } from './utils/browser-tools';
+
+// Inicializa o Browser Tools
+const browserTools = createBrowserToolsExpress({
+  supabaseUrl,
+  supabaseKey,
+  enableLogging: process.env.NODE_ENV === 'development'
+});
+
+// Adicionar o middleware
+app.use(browserTools.middleware());
+
+// Adicionar as rotas
+app.use('/api/browser-tools', browserTools.router());
+
+// Registrar eventos do servidor
+browserTools.logEvent('server-start', { 
+  timestamp: new Date().toISOString(),
+  environment: process.env.NODE_ENV || 'development'
+});
+```
+
+Endpoints disponíveis:
 - `GET /api/browser-tools/status` - Verifica o status da integração
 - `POST /api/browser-tools/events` - Registra eventos do cliente
 - `GET /api/browser-tools/metrics/performance` - Obtém métricas de performance
 - `GET /api/browser-tools/metrics/compatibility` - Obtém relatório de compatibilidade
+
+## Extensão Chrome (Opcional)
+
+Para uma experiência completa com o Browser Tools MCP, você pode instalar a extensão Chrome:
+
+1. Baixe a extensão: [BrowserToolsMCP Chrome Extension](https://github.com/AgentDeskAI/browser-tools-mcp/releases/download/v1.1.0/chrome-extension-v1-1-0.zip)
+2. Descompacte o arquivo
+3. Abra o Chrome e navegue para `chrome://extensions/`
+4. Ative o "Modo do desenvolvedor"
+5. Clique em "Carregar sem compactação" e selecione a pasta descompactada
 
 ## Padrões de Desenvolvimento
 
