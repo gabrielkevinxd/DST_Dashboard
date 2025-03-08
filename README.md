@@ -6,6 +6,17 @@ Dashboard para visualização de dados do Don't Starve Together
 
 Este projeto é um dashboard interativo para visualização e análise de dados do jogo Don't Starve Together. Ele permite aos jogadores acompanhar estatísticas, gerenciar recursos e otimizar suas estratégias de jogo.
 
+## Status do Projeto
+
+- [x] Estrutura básica do monorepo
+- [x] Configuração do ambiente de desenvolvimento
+- [x] Arquivos de configuração (package.json, tsconfig.json)
+- [ ] Implementação do frontend
+- [ ] Implementação do backend
+- [ ] Integração com Supabase
+- [ ] Implementação dos módulos principais
+- [ ] Testes e documentação
+
 ## Arquitetura
 
 O projeto segue uma estrutura de monorepo com as seguintes divisões principais:
@@ -20,7 +31,7 @@ O projeto segue uma estrutura de monorepo com as seguintes divisões principais:
 
 - Desenvolvido com React e TypeScript
 - Arquitetura de componentes baseada em features
-- UI construída com Material UI
+- UI construída com Chakra UI
 - Gerenciamento de estado com React Query
 - Visualizações de dados com Recharts
 
@@ -57,11 +68,15 @@ cd DST_Dashboard
 
 2. Instale as dependências:
 ```bash
-# Instalar dependências do frontend
+# Instalar todas as dependências do monorepo
+npm install
+
+# Ou instalar separadamente
+# Frontend
 cd frontend
 npm install
 
-# Instalar dependências do backend
+# Backend
 cd ../backend
 npm install
 ```
@@ -71,13 +86,15 @@ npm install
 
 4. Inicie o desenvolvimento:
 ```bash
+# Iniciar ambos (frontend e backend)
+npm start
+
+# Ou iniciar separadamente
 # Frontend
-cd frontend
-npm run dev
+npm run start:frontend
 
 # Backend
-cd ../backend
-npm run dev
+npm run start:backend
 ```
 
 ## Padrões de Desenvolvimento
