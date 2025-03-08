@@ -5,6 +5,9 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 
+// Importação da integração com browser-tools
+import { browserToolsMiddleware, browserToolsRouter } from './utils/browser-tools-integration';
+
 // Carrega as variáveis de ambiente
 dotenv.config();
 
@@ -23,6 +26,9 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 
+// Middleware do browser-tools
+app.use(browserToolsMiddleware);
+
 // Rotas
 import userRoutes from './controllers/userController';
 import postRoutes from './controllers/postController';
@@ -34,9 +40,25 @@ app.use('/api/posts', postRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/chat', chatRoutes);
 
+// Rotas do browser-tools
+app.use('/api/browser-tools', browserToolsRouter);
+
 // Rota de saúde
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date() });
+});
+
+// Rota para verificar status do browser-tools
+app.get('/api/browser-tools/status', (req, res) => {
+  res.status(200).json({
+    enabled: true,
+    version: '1.0.0',
+    features: [
+      'performance-monitoring',
+      'compatibility-check',
+      'event-logging'
+    ]
+  });
 });
 
 // Middleware de tratamento de erros
@@ -51,4 +73,5 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 // Inicia o servidor
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
+  console.log(`Browser-tools MCP ativado e disponível em /api/browser-tools`);
 });
